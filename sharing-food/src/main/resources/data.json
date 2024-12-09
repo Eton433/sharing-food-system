@@ -1,0 +1,25 @@
+{
+  "customers": [
+    {
+      "studentId": "112306001",
+      "name": "Alice Johnson",
+      "password": "alice123"
+    },
+    {
+      "studentId": "112306002",
+      "name": "Bob Smith",
+      "password": "bob123"
+    }
+  ],
+  "foodItems": [
+    {
+      "description": "Chocolate Cake",
+      "price": 10.0,
+      "location": "Room 101",
+      "quantity": 5,
+      "expiryDate": "2024-12-01",
+      "imageUrl": "/uploads/chocolate_cake.jpg",
+      "sellerStudentId": "112306001"
+    }
+  ]
+}
