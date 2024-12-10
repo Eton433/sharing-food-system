@@ -1,0 +1,79 @@
+/* 基本樣式 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* 柔和背景色 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 將內容垂直居中 */
+}
+
+/* 容器樣式 */
+.container {
+    max-width: 600px;
+    padding: 30px;
+    background-color: #ffffff; /* 白色背景 */
+    border-radius: 10px; /* 圓角效果 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 柔和陰影 */
+    text-align: left; /* 左對齊內容 */
+}
+
+/* 標題樣式 */
+h1 {
+    text-align: center;
+    color: #343a40; /* 深灰色文字 */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* 錯誤消息樣式 */
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* 表單標籤樣式 */
+.form-label {
+    font-weight: bold;
+    color: #495057; /* 深灰色文字 */
+    margin-bottom: 5px;
+}
+
+/* 表單輸入框樣式 */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da; /* 灰色邊框 */
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    border-color: #007bff; /* 藍色邊框 */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none; /* 移除默認邊框 */
+}
+
+/* 按鈕樣式 */
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}

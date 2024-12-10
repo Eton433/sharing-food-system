@@ -1,0 +1,76 @@
+/* 基本樣式 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* 柔和的背景色 */
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #343a40; /* 深色文字，提升可讀性 */
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* 容器樣式 */
+.container {
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 20px;
+    background-color: #ffffff; /* 白色背景 */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加陰影效果 */
+}
+
+/* 搜尋表單樣式 */
+.input-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.input-group .form-control {
+    border-radius: 5px 0 0 5px; /* 左邊圓角 */
+    border: 1px solid #ced4da;
+    padding: 10px;
+}
+
+.input-group .btn-primary {
+    border-radius: 0 5px 5px 0; /* 右邊圓角 */
+    padding: 10px 20px;
+    transition: all 0.3s;
+}
+
+.input-group .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* 表格樣式 */
+.table {
+    margin-top: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #007bff; /* 表頭背景顏色 */
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+/* 高亮行（鼠標懸停） */
+.table tbody tr:hover {
+    background-color: #f1f3f5; /* 淺灰色背景 */
+    transition: background-color 0.3s ease;
+}

@@ -1,0 +1,58 @@
+/* 基本樣式 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa; /* 柔和背景色 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 將內容垂直居中 */
+}
+
+/* 容器樣式 */
+.container {
+    max-width: 500px;
+    padding: 30px;
+    background-color: #ffffff; /* 白色背景 */
+    border-radius: 10px; /* 圓角效果 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加柔和陰影 */
+    text-align: center; /* 內容居中 */
+}
+
+/* 標題樣式 */
+h1 {
+    color: #343a40; /* 深灰色文字 */
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* 按鈕樣式 */
+.btn {
+    margin: 10px 5px; /* 按鈕之間的間距 */
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px; /* 圓角按鈕 */
+    text-decoration: none; /* 移除默認的下劃線 */
+    transition: all 0.3s ease; /* 添加過渡效果 */
+}
+
+.btn-primary {
+    background-color: #007bff; /* 藍色背景 */
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* 深藍色懸停效果 */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* 紅色背景 */
+    border: none;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37; /* 深紅色懸停效果 */
+}
