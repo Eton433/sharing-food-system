@@ -56,12 +56,13 @@
             
             <!-- Add Food Button -->
             <a href="/food-items/add" class="btn btn-primary">Add Food Item</a><br>
+			<a href="/food-items" th:href="@{/food-items}" class="btn btn-primary">Browse Food Items</a><br>
+			<a href="/transactions/customer" th:href="@{/transactions/customer}" class="btn btn-primary">View Transactions</a>
+			<a href="/transactions/seller" th:href="@{/transactions/seller}" class="btn btn-primary">Manage Sold Items</a>
         </div>
 
         <!-- Browse Food Items and View Transactions Buttons -->
-        <a href="/food-items" th:href="@{/food-items}" class="btn btn-primary">Browse Food Items</a><br>
-        <a href="/transactions/customer" th:href="@{/transactions/customer}" class="btn btn-primary">View Transactions</a>
-		<a href="/transactions/seller" th:href="@{/transactions/seller}" class="btn btn-primary">Manage Sold Items</a>
+        
     </div>
 </body>
 </html>

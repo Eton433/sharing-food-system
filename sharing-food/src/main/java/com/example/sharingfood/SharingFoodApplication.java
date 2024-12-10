@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +41,14 @@ public class SharingFoodApplication {
                 // 將 JSON 轉換為 Map
                 Map<String, Object> data = objectMapper.readValue(inputStream, HashMap.class);
 
-                // 初始化客戶資料（包含卖家）
+                // 初始化客戶資料
                 List<Map<String, String>> customers = (List<Map<String, String>>) data.get("customers");
                 for (Map<String, String> customerData : customers) {
                     Customer customer = new Customer();
-                    customer.setStudentId(customerData.get("studentId")); // 設定學號
-                    customer.setName(customerData.get("name")); // 設定名字
-                    customer.setEmail(customerData.get("studentId") + "@nccu.edu.tw"); // 設定電子郵件
-                    customer.setPassword(customerData.get("password")); // 設定密碼
+                    customer.setStudentId(customerData.get("studentId"));
+                    customer.setName(customerData.get("name"));
+                    customer.setEmail(customerData.get("studentId") + "@nccu.edu.tw");
+                    customer.setPassword(customerData.get("password"));
                     customerRepository.save(customer);
                 }
 
@@ -63,7 +64,28 @@ public class SharingFoodApplication {
                         foodItem.setPrice(Double.parseDouble(foodItemData.get("price").toString()));
                         foodItem.setLocation((String) foodItemData.get("location"));
                         foodItem.setQuantity(Integer.parseInt(foodItemData.get("quantity").toString()));
-                        foodItem.setExpiryDate((String) foodItemData.get("expiryDate"));
+
+                        // 解析日期並檢查格式
+                        try {
+                            LocalDate expiryDate = LocalDate.parse((String) foodItemData.get("expiryDate"));
+                            foodItem.setExpiryDate(expiryDate);
+                        } catch (Exception e) {
+                            System.err.println("無法解析日期: " + foodItemData.get("expiryDate") + "，項目將跳過。");
+                            continue;
+                        }
+
+                        // 新增解析經緯度邏輯
+                        try {
+                            Double latitude = Double.parseDouble(foodItemData.get("latitude").toString());
+                            Double longitude = Double.parseDouble(foodItemData.get("longitude").toString());
+                            foodItem.setLatitude(latitude);
+                            foodItem.setLongitude(longitude);
+                        } catch (Exception e) {
+                            System.err.println("經緯度解析失敗: " + e.getMessage());
+                            foodItem.setLatitude(25.0272); // 預設為政大校園緯度
+                            foodItem.setLongitude(121.5228); // 預設為政大校園經度
+                        }
+
                         foodItem.setImageUrl((String) foodItemData.get("imageUrl"));
                         foodItem.setSeller(seller);
                         foodItemRepository.save(foodItem);

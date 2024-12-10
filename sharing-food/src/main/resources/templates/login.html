@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
+<<<<<<< HEAD
 <div class="container">
     <h1>Customer Login</h1>
     <form action="/login" method="post">
@@ -20,5 +21,22 @@
         <button type="submit" class="btn">Login</button>
     </form>
 </div>
+=======
+    <div class="container">
+        <h1>Student Login</h1>
+        <form action="/login" method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">NCCU Email</label>
+                <input type="email" name="email" id="email" class="form-control" placeholder="Enter your NCCU email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+            <div class="text-danger" th:if="${error}" th:text="${error}"></div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+>>>>>>> 79591880efa0aac36bbd11a0079abde3da4a8106
 </body>
 </html>
