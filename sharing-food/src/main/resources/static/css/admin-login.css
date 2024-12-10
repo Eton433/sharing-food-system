@@ -1,29 +1,28 @@
-/* 基本樣式 */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* 柔和的背景色 */
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* 全頁居中 */
+    height: 100vh;
 }
 
 h1 {
     text-align: center;
-    color: #343a40; /* 深灰色文字 */
+    color: #343a40;
     margin-bottom: 20px;
 }
 
-/* 表單容器樣式 */
 form {
-    background-color: #ffffff; /* 白色背景 */
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 柔和的陰影效果 */
-    width: 300px; /* 固定寬度 */
-    text-align: center; /* 內容居中 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
     box-sizing: border-box; /* 確保寬度包含 padding */
 }
 

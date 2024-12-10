@@ -1,14 +1,14 @@
-/* 基本樣式 */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* 柔和背景色 */
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
 
 h1 {
     text-align: center;
-    color: #343a40; /* 深色文字 */
+    color: #343a40;
     margin-top: 20px;
     margin-bottom: 30px;
     font-weight: bold;

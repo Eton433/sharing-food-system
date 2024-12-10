@@ -1,34 +1,31 @@
-/* 基本樣式 */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* 柔和背景色 */
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* 將內容垂直居中 */
+    min-height: 100vh;
 }
 
-/* 容器樣式 */
 .container {
     max-width: 600px;
     padding: 30px;
-    background-color: #ffffff; /* 白色背景 */
-    border-radius: 10px; /* 圓角效果 */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 柔和陰影 */
-    text-align: left; /* 左對齊內容 */
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: left;
 }
 
-/* 標題樣式 */
 h1 {
     text-align: center;
-    color: #343a40; /* 深灰色文字 */
+    color: #343a40;
     margin-bottom: 20px;
     font-weight: bold;
 }
 
-/* 錯誤消息樣式 */
 .alert-danger {
     color: #721c24;
     background-color: #f8d7da;
@@ -38,14 +35,12 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* 表單標籤樣式 */
 .form-label {
     font-weight: bold;
-    color: #495057; /* 深灰色文字 */
+    color: #495057;
     margin-bottom: 5px;
 }
 
-/* 表單輸入框樣式 */
 .form-control {
     border-radius: 5px;
     border: 1px solid #ced4da; /* 灰色邊框 */

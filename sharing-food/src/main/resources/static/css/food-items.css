@@ -1,7 +1,7 @@
-/* 基本樣式 */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* 柔和的背景色 */
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
@@ -12,7 +12,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* 容器樣式 */
 .container {
     margin: 0 auto;
     max-width: 1200px;
@@ -22,7 +21,6 @@ h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 表格樣式 */
 .table {
     border: 1px solid #dee2e6;
     margin-bottom: 30px;
@@ -40,7 +38,6 @@ h1 {
     vertical-align: middle;
 }
 
-/* 搜索框樣式 */
 form.d-flex {
     align-items: center;
     justify-content: center;
@@ -60,14 +57,12 @@ form.d-flex button {
     font-size: 14px;
 }
 
-/* 圖片樣式 */
 .img-thumbnail {
     width: 150px;
     height: auto;
     border-radius: 10px;
 }
 
-/* 按鈕樣式 */
 .btn-primary {
     background-color: #007bff;
     border: none;
@@ -92,7 +87,6 @@ form.d-flex button {
     color: white;
 }
 
-/* 模態框樣式 */
 .modal-content {
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -115,7 +109,6 @@ form.d-flex button {
     font-size: 14px;
 }
 
-/* 取消按鈕樣式 */
 .btn-secondary {
     background-color: #6c757d;
     border: none;

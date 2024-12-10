@@ -1,37 +1,35 @@
-/* 基本樣式 */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa; /* 柔和的背景色 */
+    background-color: #f8f9fa;
     margin: 0;
     padding: 0;
 }
 
 h1 {
     text-align: center;
-    color: #343a40; /* 深色文字，易於閱讀 */
+    color: #343a40;
     margin-top: 30px;
     margin-bottom: 30px;
     font-weight: bold;
 }
 
-/* 容器樣式 */
 .container {
     margin: 0 auto;
     max-width: 900px;
     padding: 20px;
-    background-color: #ffffff; /* 白色背景 */
+    background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 柔和的陰影效果 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 表格樣式 */
 .table {
     margin-top: 20px;
     border: 1px solid #dee2e6;
 }
 
 .table th {
-    background-color: #007bff; /* 表頭背景色 */
+    background-color: #007bff;
     color: white;
     text-align: center;
     font-weight: bold;
@@ -44,15 +42,13 @@ h1 {
     padding: 10px;
 }
 
-/* 空狀態樣式 */
 .table td[colspan="3"] {
     text-align: center;
-    color: #6c757d; /* 灰色文字 */
+    color: #6c757d;
     font-style: italic;
 }
 
-/* 高亮行（鼠標懸停） */
 .table tbody tr:hover {
-    background-color: #f1f3f5; /* 淺灰色背景 */
+    background-color: #f1f3f5;
     transition: background-color 0.3s ease;
 }
