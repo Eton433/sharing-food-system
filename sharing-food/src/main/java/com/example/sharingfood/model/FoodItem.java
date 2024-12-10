@@ -1,6 +1,7 @@
 package com.example.sharingfood.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class FoodItem {
@@ -8,17 +9,21 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
+    private String description; // 簡要描述食品
     private double price;
-    private String location;
+
+    private String location; // 詳細地址描述（例如：幾樓、房號）
+    private double latitude; // 經度
+    private double longitude; // 緯度
+
     private int quantity;
-    private String expiryDate;
-    private String imageUrl; // 新增字段，保存照片URL
+    private LocalDate expiryDate; // 過期日期
+    private String imageUrl; // 圖片的 URL
 
     @ManyToOne
-    private Customer seller; // 将关联改为 Customer
+    private Customer seller; // 賣家資訊
 
-    // Getter and Setter
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -51,6 +56,22 @@ public class FoodItem {
         this.location = location;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -59,11 +80,11 @@ public class FoodItem {
         this.quantity = quantity;
     }
 
-    public String getExpiryDate() {
+    public LocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(LocalDate expiryDate) {
         this.expiryDate = expiryDate;
     }
 
