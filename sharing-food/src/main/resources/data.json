@@ -9,7 +9,12 @@
       "studentId": "112306002",
       "name": "Bob Smith",
       "password": "bob123"
-    }
+    },
+	{
+	     "studentId": "113504019",
+	     "name": "Woody",
+	     "password": "cuntybitch"
+	   }
   ],
   "foodItems": [
     {
