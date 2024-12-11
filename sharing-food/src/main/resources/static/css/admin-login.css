@@ -1,0 +1,82 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    box-sizing: border-box; /* 確保寬度包含 padding */
+}
+
+/* 表單標籤樣式 */
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #495057; /* 中灰色文字 */
+    font-weight: bold;
+    text-align: left; /* 標籤文字靠左對齊 */
+}
+
+/* 表單輸入框樣式 */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da; /* 灰色邊框 */
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box; /* 包含內邊距和邊框 */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #007bff; /* 藍色邊框 */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none; /* 移除默認邊框 */
+}
+
+/* 按鈕樣式 */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* 藍色背景 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3; /* 深藍色背景 */
+}
+
+/* 錯誤提示樣式 */
+.error-message {
+    color: #d9534f; /* 紅色文字 */
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center; /* 提示文字居中 */
+}
+
+
