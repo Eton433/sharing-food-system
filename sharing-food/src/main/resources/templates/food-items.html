@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Food Items</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Available Food Items</h1>
+
+        <!-- User welcome and Add New Item button -->
+        <div th:if="${customer != null}">
+            <p>Welcome, <span th:text="${customer.name}"></span>!</p>
+            <a th:href="@{/food-items/add}" class="btn btn-primary mb-3">Add New Food Item</a>
+        </div>
+
+        <!-- Search bar -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <form action="/food-items/search" method="get" class="d-flex mb-4">
+                    <input type="text" name="keyword" class="form-control me-2" placeholder="Search for food...">
+                    <button type="submit" class="btn btn-outline-success">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Food items table -->
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Seller</th>
+                            <th>Price</th>
+                            <th>Location</th>
+                            <th>Quantity</th>
+                            <th>Expiry Date</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="foodItem : ${foodItems}">
+                            <td th:text="${foodItem.description}"></td>
+                            <td th:text="${foodItem.seller.name}"></td>
+                            <td th:text="${foodItem.price}"></td>
+                            <td th:text="${foodItem.location}"></td>
+                            <td th:text="${foodItem.quantity}"></td>
+                            <td th:text="${foodItem.expiryDate}"></td>
+                            <td>
+                                <img th:src="${foodItem.imageUrl}" alt="Food Image" class="img-thumbnail" style="width: 200px; height: auto;" />
+                            </td>
+                            <td>
+                                <!-- 查看位置按鈕 -->
+                                <a th:href="@{/food-items/location/{id}(id=${foodItem.id})}" target="_blank" class="btn btn-info mb-2">
+                                    View Location
+                                </a>
+                                <!-- Order 按鈕 -->
+                                <button type="button" class="btn btn-primary order-btn"
+                                        th:attr="data-food-id=${foodItem.id}, data-food-description=${foodItem.description}, data-food-price=${foodItem.price}, data-food-quantity=${foodItem.quantity}, data-customer-id=${customer.studentId}">
+                                    Order
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a th:href="@{/transactions/customer}" class="btn btn-primary mb-3">View Transactions</a>
+                <a th:href="@{/}" class="btn btn-primary">Back</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel">Confirm Your Order</h5>
+                    <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to place this order?</p>
+                    <p><strong>Description:</strong> <span id="foodDescription"></span></p>
+                    <p><strong>Price:</strong> $<span id="foodPrice"></span></p>
+                    <p><strong>Quantity:</strong> <span id="foodQuantity"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelOrderBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmOrderBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden field to store customer studentId -->
+    <input type="hidden" th:value="${customer.studentId}" id="customerStudentId">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 綁定 Order 按鈕行為
+        document.querySelectorAll('.order-btn').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                var foodId = event.target.getAttribute('data-food-id');
+                var description = event.target.getAttribute('data-food-description');
+                var price = event.target.getAttribute('data-food-price');
+                var quantity = event.target.getAttribute('data-food-quantity');
+                var customerId = event.target.getAttribute('data-customer-id');
+
+                // 填充模態框數據
+                document.getElementById('foodDescription').textContent = description;
+                document.getElementById('foodPrice').textContent = price;
+                document.getElementById('foodQuantity').textContent = quantity;
+
+                // 確認按鈕的提交行為
+                document.getElementById('confirmOrderBtn').onclick = function() {
+                    var form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/food-items/order';
+
+                    var inputs = [
+                        { name: 'foodItemId', value: foodId },
+                        { name: 'studentId', value: customerId },
+                        { name: 'paymentMethod', value: 'credit_card' }
+                    ];
+                    inputs.forEach(function(input) {
+                        var hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = input.name;
+                        hiddenInput.value = input.value;
+                        form.appendChild(hiddenInput);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit();
+                };
+
+                // 顯示模態框
+                new bootstrap.Modal(document.getElementById('orderModal')).show();
+            });
+        });
+
+        // 綁定取消按鈕行為
+        document.getElementById('cancelOrderBtn').addEventListener('click', function() {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('orderModal'));
+            modal.hide();
+        });
+
+        // 綁定關閉按鈕行為
+        document.getElementById('closeModal').addEventListener('click', function() {
+            var modal = bootstrap.Modal.getInstance(document.getElementById('orderModal'));
+            modal.hide();
+        });
+    </script>
+</body>
+</html>
