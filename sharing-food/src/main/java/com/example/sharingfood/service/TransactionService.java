@@ -34,6 +34,9 @@ public class TransactionService {
     public List<Transaction> getTransactionsBySeller(String sellerId) {
         return transactionRepository.findByFoodItem_Seller_StudentId(sellerId);
     }
+    public Transaction getTransactionById(Long transactionId) {
+        return transactionRepository.findById(transactionId).orElse(null);
+    }
 
     // 更新交易狀態（管理員功能）
     public void updateTransactionStatus(Long transactionId, String status) {

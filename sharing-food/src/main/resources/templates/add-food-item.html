@@ -24,7 +24,7 @@
             <img th:src="${suggestedImage}" alt="Suggested Image" class="img-thumbnail" style="max-width: 300px;">
         </div>
 
-        <form action="/food-items/add" method="post" enctype="multipart/form-data">
+        <form id="addFoodForm" action="/food-items/add" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <input type="text" name="description" id="description" class="form-control" required>
@@ -88,6 +88,18 @@
             // 將經緯度設置到隱藏字段中
             document.getElementById('latitude').value = lat;
             document.getElementById('longitude').value = lng;
+        });
+
+        // 表單提交前進行驗證
+        document.getElementById('addFoodForm').addEventListener('submit', function(event) {
+            var latitude = document.getElementById('latitude').value;
+            var longitude = document.getElementById('longitude').value;
+
+            // 如果經緯度未填寫，阻止表單提交並提示用戶
+            if (!latitude || !longitude) {
+                event.preventDefault();
+                alert("Please select a location on the map before submitting the form.");
+            }
         });
     </script>
 </body>

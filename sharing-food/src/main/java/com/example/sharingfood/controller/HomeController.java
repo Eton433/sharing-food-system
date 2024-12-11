@@ -20,8 +20,23 @@ public class HomeController {
         this.customerRepository = customerRepository;
     }
 
+    /**
+     * 確保用戶已登入的方法
+     */
+    private Customer ensureLoggedIn(HttpSession session) {
+        Customer loggedInCustomer = (Customer) session.getAttribute("loggedInCustomer");
+        if (loggedInCustomer == null) {
+            throw new IllegalStateException("User not logged in.");
+        }
+        return loggedInCustomer;
+    }
+
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(HttpSession session) {
+        // 如果用戶已登入，直接跳轉到首頁
+        if (session.getAttribute("loggedInCustomer") != null) {
+            return "redirect:/";
+        }
         return "login";
     }
 
@@ -44,8 +59,18 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(HttpSession session, Model model) {
-        Customer loggedInCustomer = (Customer) session.getAttribute("loggedInCustomer");
-        model.addAttribute("loggedInCustomer", loggedInCustomer);
-        return "index";
+        try {
+            Customer loggedInCustomer = ensureLoggedIn(session);
+            model.addAttribute("loggedInCustomer", loggedInCustomer);
+            return "index";
+        } catch (IllegalStateException e) {
+            return "redirect:/login";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // 清除所有會話屬性
+        return "redirect:/login";
     }
 }

@@ -29,9 +29,10 @@
             color: #555;
         }
         .btn {
-            display: inline-block;
+            display: block; /* 垂直排列按鈕 */
+            width: 100%; /* 按鈕寬度填滿 */
             padding: 10px 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* 按鈕間距 */
             font-size: 1rem;
             color: #fff;
             text-decoration: none;
@@ -45,6 +46,13 @@
         .btn-primary:hover {
             background-color: #0056b3;
         }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #b02a37;
+        }
     </style>
 </head>
 <body>
@@ -54,15 +62,13 @@
         <div th:if="${loggedInCustomer}">
             <p>Welcome, <span th:text="${loggedInCustomer.name}"></span>!</p>
             
-            <!-- Add Food Button -->
-            <a href="/food-items/add" class="btn btn-primary">Add Food Item</a><br>
-			<a href="/food-items" th:href="@{/food-items}" class="btn btn-primary">Browse Food Items</a><br>
-			<a href="/transactions/customer" th:href="@{/transactions/customer}" class="btn btn-primary">View Transactions</a>
-			<a href="/transactions/seller" th:href="@{/transactions/seller}" class="btn btn-primary">Manage Sold Items</a>
+            <!-- 垂直排列按鈕 -->
+            <a href="/food-items/add" class="btn btn-primary">Add Food Item</a>
+            <a href="/food-items" th:href="@{/food-items}" class="btn btn-primary">Browse Food Items</a>
+            <a href="/transactions/customer" th:href="@{/transactions/customer}" class="btn btn-primary">View Transactions</a>
+            <a href="/transactions/seller" th:href="@{/transactions/seller}" class="btn btn-primary">Manage Sold Items</a>
+            <a href="/logout" class="btn btn-danger">Logout</a>
         </div>
-
-        <!-- Browse Food Items and View Transactions Buttons -->
-        
     </div>
 </body>
 </html>
