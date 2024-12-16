@@ -54,45 +54,65 @@ public class SharingFoodApplication {
 
                 // 初始化食物項目資料
                 List<Map<String, Object>> foodItems = (List<Map<String, Object>>) data.get("foodItems");
-                for (Map<String, Object> foodItemData : foodItems) {
-                    String sellerStudentId = (String) foodItemData.get("sellerStudentId");
-                    Customer seller = customerRepository.findById(sellerStudentId).orElse(null);
 
-                    if (seller != null) {
-                        FoodItem foodItem = new FoodItem();
-                        foodItem.setDescription((String) foodItemData.get("description"));
-                        foodItem.setPrice(Double.parseDouble(foodItemData.get("price").toString()));
-                        foodItem.setLocation((String) foodItemData.get("location"));
-                        foodItem.setQuantity(Integer.parseInt(foodItemData.get("quantity").toString()));
+             // 確保 foodItems 不為 null
+             if (foodItems == null || foodItems.isEmpty()) {
+                 System.out.println("目前沒有可用的食物項目。");
+                 return; // 可以選擇直接返回空結果或繼續執行
+             }
 
-                        // 解析日期並檢查格式
-                        try {
-                            LocalDate expiryDate = LocalDate.parse((String) foodItemData.get("expiryDate"));
-                            foodItem.setExpiryDate(expiryDate);
-                        } catch (Exception e) {
-                            System.err.println("無法解析日期: " + foodItemData.get("expiryDate") + "，項目將跳過。");
-                            continue;
-                        }
+             for (Map<String, Object> foodItemData : foodItems) {
+                 if (foodItemData == null) {
+                     System.err.println("發現空的 FoodItem 資料，跳過處理。");
+                     continue;
+                 }
 
-                        // 新增解析經緯度邏輯
-                        try {
-                            Double latitude = Double.parseDouble(foodItemData.get("latitude").toString());
-                            Double longitude = Double.parseDouble(foodItemData.get("longitude").toString());
-                            foodItem.setLatitude(latitude);
-                            foodItem.setLongitude(longitude);
-                        } catch (Exception e) {
-                            System.err.println("經緯度解析失敗: " + e.getMessage());
-                            foodItem.setLatitude(25.0272); // 預設為政大校園緯度
-                            foodItem.setLongitude(121.5228); // 預設為政大校園經度
-                        }
+                 String sellerStudentId = (String) foodItemData.get("sellerStudentId");
+                 Customer seller = customerRepository.findById(sellerStudentId).orElse(null);
 
-                        foodItem.setImageUrl((String) foodItemData.get("imageUrl"));
-                        foodItem.setSeller(seller);
-                        foodItemRepository.save(foodItem);
-                    } else {
-                        System.err.println("無法找到賣家: " + sellerStudentId + "，食物項目將不會被儲存。");
-                    }
-                }
+                 if (seller != null) {
+                     FoodItem foodItem = new FoodItem();
+
+                     try {
+                         foodItem.setDescription((String) foodItemData.get("description"));
+                         foodItem.setPrice(Double.parseDouble(foodItemData.get("price").toString()));
+                         foodItem.setLocation((String) foodItemData.get("location"));
+                         foodItem.setQuantity(Integer.parseInt(foodItemData.get("quantity").toString()));
+
+                         // 解析日期並檢查格式
+                         try {
+                             LocalDate expiryDate = LocalDate.parse((String) foodItemData.get("expiryDate"));
+                             foodItem.setExpiryDate(expiryDate);
+                         } catch (Exception e) {
+                             System.err.println("無法解析日期: " + foodItemData.get("expiryDate") + "，將跳過此項目。");
+                             continue;
+                         }
+
+                         // 新增解析經緯度邏輯
+                         try {
+                             Double latitude = Double.parseDouble(foodItemData.get("latitude").toString());
+                             Double longitude = Double.parseDouble(foodItemData.get("longitude").toString());
+                             foodItem.setLatitude(latitude);
+                             foodItem.setLongitude(longitude);
+                         } catch (Exception e) {
+                             System.err.println("經緯度解析失敗: " + e.getMessage());
+                             foodItem.setLatitude(25.0272); // 預設為政大校園緯度
+                             foodItem.setLongitude(121.5228); // 預設為政大校園經度
+                         }
+
+                         foodItem.setImageUrl((String) foodItemData.get("imageUrl"));
+                         foodItem.setSeller(seller);
+                     } catch (Exception e) {
+                         System.err.println("無法初始化 FoodItem 對象，跳過該項目: " + e.getMessage());
+                         continue;
+                     }
+
+                     foodItemRepository.save(foodItem);
+                 } else {
+                     System.err.println("無法找到賣家: " + sellerStudentId + "，食物項目將不會被儲存。");
+                 }
+             }
+
 
                 // 輸出初始化的資料
                 System.out.println("初始化完成！");

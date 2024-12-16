@@ -20,9 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 @Controller
 public class FoodItemController {
@@ -45,9 +52,6 @@ public class FoodItemController {
         this.customerRepository = customerRepository;
     }
 
-    /**
-     * 確保用戶已登入的方法
-     */
     private Customer ensureLoggedIn(HttpSession session) {
         Customer loggedInCustomer = (Customer) session.getAttribute("loggedInCustomer");
         if (loggedInCustomer == null) {
@@ -92,11 +96,10 @@ public class FoodItemController {
                 return "redirect:/food-items";
             }
 
-            // 傳遞食品位置相關資訊
             model.addAttribute("latitude", foodItem.getLatitude());
             model.addAttribute("longitude", foodItem.getLongitude());
             model.addAttribute("description", foodItem.getDescription());
-            model.addAttribute("location", foodItem.getLocation()); // 傳遞詳細位置描述
+            model.addAttribute("location", foodItem.getLocation());
 
             return "food-location";
         } catch (IllegalStateException e) {
@@ -105,19 +108,22 @@ public class FoodItemController {
     }
 
     @PostMapping("/food-items/add")
-    public String addFoodItem(@RequestParam String description,
-                              @RequestParam String location,
-                              @RequestParam double price,
-                              @RequestParam int quantity,
-                              @RequestParam String expiryDate,
-                              @RequestParam("image") MultipartFile image,
-                              @RequestParam double latitude,
-                              @RequestParam double longitude,
-                              HttpSession session,
-                              Model model) {
+    public String addFoodItem(
+            @RequestParam String description,
+            @RequestParam String location,
+            @RequestParam double price,
+            @RequestParam int quantity,
+            @RequestParam String expiryDate,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            HttpSession session,
+            Model model) {
         try {
+            // Step 0: 確認用戶是否登入
             Customer seller = ensureLoggedIn(session);
 
+            // Step 1: 初始化 FoodItem 實體
             FoodItem foodItem = new FoodItem();
             foodItem.setDescription(description);
             foodItem.setLocation(location);
@@ -127,7 +133,7 @@ public class FoodItemController {
             foodItem.setLongitude(longitude);
 
             try {
-                // Step 1: 驗證日期格式和範圍
+                // Step 2: 驗證過期日期
                 LocalDate parsedDate = LocalDate.parse(expiryDate);
                 if (parsedDate.isBefore(LocalDate.now()) || parsedDate.isAfter(LocalDate.now().plusMonths(12))) {
                     model.addAttribute("errorMessage", "Invalid expiry date. Please select a date within the next 12 months.");
@@ -135,23 +141,56 @@ public class FoodItemController {
                 }
                 foodItem.setExpiryDate(parsedDate);
 
-                // Step 2: 檢查圖片是否為空
+                // Step 3: 檢查圖片
                 if (image.isEmpty()) {
                     model.addAttribute("errorMessage", "Image file is empty.");
                     model.addAttribute("suggestedImage", "/images/default.jpg");
                     return "add-food-item";
                 }
 
+                if (!image.getContentType().startsWith("image/")) {
+                    throw new IllegalArgumentException("Uploaded file is not a valid image.");
+                }
 
-                // Step 3: 使用 Google Vision API 審核圖片是否符合描述
-                boolean isDescriptionMatched = googleVisionService.checkImageDescription(image, description);
+                // Step 4: 強制轉換圖片為 JPG 並處理尺寸
+                BufferedImage originalImage = ImageIO.read(image.getInputStream());
+                if (originalImage == null) {
+                    throw new IllegalArgumentException("Unable to process the uploaded image. Please upload a valid image file.");
+                }
+
+                int minWidth = 640, minHeight = 480;
+                int maxWidth = 1600, maxHeight = 1200;
+
+                int originalWidth = originalImage.getWidth();
+                int originalHeight = originalImage.getHeight();
+
+                BufferedImage adjustedImage = originalImage;
+
+                if (originalWidth < minWidth || originalHeight < minHeight || originalWidth > maxWidth || originalHeight > maxHeight) {
+                    int newWidth = Math.min(Math.max(originalWidth, minWidth), maxWidth);
+                    int newHeight = Math.min(Math.max(originalHeight, minHeight), maxHeight);
+
+                    adjustedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g = adjustedImage.createGraphics();
+                    g.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+                    g.dispose();
+                }
+
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                ImageIO.write(adjustedImage, "jpg", os);
+                byte[] imageBytes = os.toByteArray();
+
+                // Step 5: 使用 Google Vision API 審核圖片
+                boolean isDescriptionMatched = googleVisionService.checkImageDescription(imageBytes, description, "image/jpeg");
                 if (!isDescriptionMatched) {
                     model.addAttribute("errorMessage", "The image does not match the description.");
                     model.addAttribute("suggestedImage", "https://foodsharing-image.s3.ap-southeast-1.amazonaws.com/uploads/alert.jpg");
                     return "add-food-item";
                 }
-             // Step 4: 上傳圖片到 S3 並獲取圖片 URL
-                String imageUrl = s3Service.uploadFile(image);
+
+                // Step 6: 上傳圖片到 S3 並獲取 URL
+                String uniqueFileName = "image_" + System.currentTimeMillis() + ".jpg";
+                String imageUrl = s3Service.uploadFile(imageBytes, uniqueFileName, "image/jpeg");
                 foodItem.setImageUrl(imageUrl);
 
             } catch (DateTimeParseException e) {
@@ -162,14 +201,18 @@ public class FoodItemController {
                 return "add-food-item";
             }
 
-            // Step 5: 保存食品項目
+            // Step 7: 保存食品項目
             foodItem.setSeller(seller);
             foodItemRepository.save(foodItem);
+
+            // 成功保存後重定向
             return "redirect:/food-items";
+
         } catch (IllegalStateException e) {
             return "redirect:/login";
         }
     }
+
 
     @PostMapping("/food-items/order")
     public String orderFoodItem(@RequestParam Long foodItemId,

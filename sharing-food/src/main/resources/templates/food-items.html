@@ -25,50 +25,63 @@
         </div>
 
         <!-- Food items table -->
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Seller</th>
-                            <th>Price</th>
-                            <th>Location</th>
-                            <th>Quantity</th>
-                            <th>Expiry Date</th>
-                            <th>Image</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="foodItem : ${foodItems}">
-                            <td th:text="${foodItem.description}"></td>
-                            <td th:text="${foodItem.seller.name}"></td>
-                            <td th:text="${foodItem.price}"></td>
-                            <td th:text="${foodItem.location}"></td>
-                            <td th:text="${foodItem.quantity}"></td>
-                            <td th:text="${foodItem.expiryDate}"></td>
-                            <td>
-                                <img th:src="${foodItem.imageUrl}" alt="Food Image" class="img-thumbnail" style="width: 200px; height: auto;" />
-                            </td>
-                            <td>
-                                <!-- 查看位置按鈕 -->
-                                <a th:href="@{/food-items/location/{id}(id=${foodItem.id})}" target="_blank" class="btn btn-info mb-2">
-                                    View Location
-                                </a>
-                                <!-- Order 按鈕 -->
-                                <button type="button" class="btn btn-primary order-btn"
-                                        th:attr="data-food-id=${foodItem.id}, data-food-description=${foodItem.description}, data-food-price=${foodItem.price}, data-food-quantity=${foodItem.quantity}, data-customer-id=${customer.studentId}">
-                                    Order
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a th:href="@{/transactions/customer}" class="btn btn-primary mb-3">View Transactions</a>
-                <a th:href="@{/}" class="btn btn-primary">Back</a>
-            </div>
-        </div>
+		<!-- Food items table -->
+		<div class="row">
+		    <div class="col-md-12">
+		        <div th:if="${foodItems != null && !foodItems.isEmpty()}">
+		            <table class="table table-bordered">
+		                <thead>
+		                    <tr>
+		                        <th>Description</th>
+		                        <th>Seller</th>
+		                        <th>Price</th>
+		                        <th>Location</th>
+		                        <th>Quantity</th>
+		                        <th>Expiry Date</th>
+		                        <th>Image</th>
+		                        <th>Actions</th>
+		                    </tr>
+		                </thead>
+		                <tbody>
+		                    <tr th:each="foodItem : ${foodItems}">
+		                        <td th:text="${foodItem.description}"></td>
+		                        <td th:text="${foodItem.seller.name}"></td>
+		                        <td th:text="${foodItem.price}"></td>
+		                        <td th:text="${foodItem.location}"></td>
+		                        <td th:text="${foodItem.quantity}"></td>
+		                        <td th:text="${foodItem.expiryDate}"></td>
+		                        <td>
+		                            <img th:src="${foodItem.imageUrl}" alt="Food Image" class="img-thumbnail" style="width: 200px; height: auto;" />
+		                        </td>
+		                        <td>
+		                            <!-- View Location Button -->
+		                            <a th:href="@{/food-items/location/{id}(id=${foodItem.id})}" target="_blank" class="btn btn-info mb-2">
+		                                View Location
+		                            </a>
+		                            <!-- Order Button -->
+		                            <button type="button" class="btn btn-primary order-btn"
+		                                    th:attr="data-food-id=${foodItem.id}, data-food-description=${foodItem.description}, data-food-price=${foodItem.price}, data-food-quantity=${foodItem.quantity}, data-customer-id=${customer.studentId}">
+		                                Order
+		                            </button>
+		                        </td>
+		                    </tr>
+		                </tbody>
+		            </table>
+		        </div>
+
+		        <!-- No Food Items Available -->
+		        <div th:if="${foodItems == null || foodItems.isEmpty()}" class="text-center">
+		            <p class="alert alert-warning">No food available now</p>
+		        </div>
+
+		        <!-- Navigation Buttons -->
+		        <div class="mt-3">
+		            <a th:href="@{/transactions/customer}" class="btn btn-primary mb-3">View Transactions</a>
+		            <a th:href="@{/}" class="btn btn-primary">Back</a>
+		        </div>
+		    </div>
+		</div>
+
     </div>
 
     <!-- Order Confirmation Modal -->

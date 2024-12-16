@@ -1,13 +1,12 @@
 package com.example.sharingfood.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.core.sync.RequestBody;
 
-import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class S3Service {
@@ -19,23 +18,23 @@ public class S3Service {
         this.s3Client = s3Client;
     }
 
-    public String uploadFile(MultipartFile file) {
-        String key = "uploads/" + file.getOriginalFilename();
+    public String uploadFile(byte[] fileBytes, String originalFilename, String contentType) {
+        String key = "uploads/" + UUID.randomUUID() + "_" + originalFilename;
 
         try {
             s3Client.putObject(
                     PutObjectRequest.builder()
                             .bucket(bucketName)
                             .key(key)
-                            .contentType(file.getContentType())
-                            .acl("public-read") // 設置文件為公開讀取
+                            .contentType(contentType)
+                            .acl("public-read")
                             .build(),
-                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+                    RequestBody.fromBytes(fileBytes)
             );
+
             return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, "ap-southeast-1", key);
-        } catch (IOException | S3Exception e) {
+        } catch (S3Exception e) {
             throw new RuntimeException("Failed to upload file to S3: " + e.getMessage(), e);
         }
     }
-
 }
