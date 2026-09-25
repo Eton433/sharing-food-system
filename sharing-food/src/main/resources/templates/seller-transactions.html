@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Manage Sold Items</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Sold Items · SharingFood</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <th:block th:replace="~{fragments/theme :: theme}"></th:block>
     <style>
         .action-container {
             display: flex;
@@ -12,52 +15,68 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Hi, <span th:text="${sellerName}"></span>. These are your sold items:</h1>
+    <th:block th:replace="~{fragments/navbar :: navbar('sales', ${sellerName})}"></th:block>
 
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div class="page-shell">
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">Seller dashboard</span>
+                <h1>Hi, <span th:text="${sellerName}"></span></h1>
+                <p>These are your sold items.</p>
+            </div>
+        </div>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>Food Item</th>
-                    <th>Buyer</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="transaction : ${transactions}">
-                    <td th:text="${transaction.id}"></td>
-                    <td th:text="${transaction.foodItem?.description ?: 'No Description'}"></td>
-                    <td th:text="${transaction.customer.name}"></td>
-                    <td th:text="${transaction.status}"></td>
-                    <td>
-                        <form th:action="@{/transactions/update}" method="post" class="update-form">
-                            <input type="hidden" name="transactionId" th:value="${transaction.id}" />
-                            <div class="action-container">
-                                <select name="status"
-                                        class="form-select form-select-sm"
-                                        th:disabled="${transaction.status == 'Completed' || transaction.status == 'Cancelled'}">
-                                    <option value="Pending" th:selected="${transaction.status == 'Pending'}">Pending</option>
-                                    <option value="Completed" th:selected="${transaction.status == 'Completed'}">Completed</option>
-                                    <option value="Cancelled" th:selected="${transaction.status == 'Cancelled'}">Cancelled</option>
-                                </select>
-                                <button type="button"
-                                        class="btn btn-primary btn-sm update-btn"
-                                        th:disabled="${transaction.status == 'Completed' || transaction.status == 'Cancelled'}">
-                                    Update
-                                </button>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${transactions.size() == 0}">
-                    <td colspan="5" class="text-center">No transactions found.</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+        <div class="table-modern" th:if="${transactions.size() > 0}">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Food Item</th>
+                        <th>Buyer</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="transaction : ${transactions}">
+                        <td th:text="${transaction.id}"></td>
+                        <td th:text="${transaction.foodItem?.description ?: 'No Description'}"></td>
+                        <td th:text="${transaction.customer.name}"></td>
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${transaction.status == 'Completed'} ? 'status-completed' : (${transaction.status == 'Cancelled'} ? 'status-cancelled' : 'status-pending')"
+                                  th:text="${transaction.status}"></span>
+                        </td>
+                        <td>
+                            <form th:action="@{/transactions/update}" method="post" class="update-form">
+                                <input type="hidden" name="transactionId" th:value="${transaction.id}" />
+                                <div class="action-container">
+                                    <select name="status"
+                                            class="form-select form-select-sm"
+                                            th:disabled="${transaction.status == 'Completed' || transaction.status == 'Cancelled'}">
+                                        <option value="Pending" th:selected="${transaction.status == 'Pending'}">Pending</option>
+                                        <option value="Completed" th:selected="${transaction.status == 'Completed'}">Completed</option>
+                                        <option value="Cancelled" th:selected="${transaction.status == 'Cancelled'}">Cancelled</option>
+                                    </select>
+                                    <button type="button"
+                                            class="btn btn-primary btn-sm update-btn"
+                                            th:disabled="${transaction.status == 'Completed' || transaction.status == 'Cancelled'}">
+                                        Update
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="empty-state card-surface" th:if="${transactions.size() == 0}">
+            <div class="empty-icon">📦</div>
+            <p>No transactions found.</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

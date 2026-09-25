@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="app-navbar" th:fragment="navbar(active, name)">
+    <div class="navbar-inner">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">🍱</span>
+            <span>SharingFood</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/}" th:classappend="${active == 'home'} ? 'active'">Home</a>
+            <a th:href="@{/food-items}" th:classappend="${active == 'browse'} ? 'active'">Browse Food</a>
+            <a th:href="@{/food-items/add}" th:classappend="${active == 'add'} ? 'active'">Add Item</a>
+            <a th:href="@{/transactions/customer}" th:classappend="${active == 'purchases'} ? 'active'">My Purchases</a>
+            <a th:href="@{/transactions/seller}" th:classappend="${active == 'sales'} ? 'active'">My Sales</a>
+        </div>
+        <div class="nav-user" th:if="${name != null and !#strings.isEmpty(name)}">
+            <span class="avatar" th:text="${#strings.substring(name,0,1)}">U</span>
+            <span th:text="${name}">User</span>
+        </div>
+        <a class="btn-logout" th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+<nav class="app-navbar" th:fragment="adminNavbar(active)" style="background: linear-gradient(120deg, #2b2320, #453a34);">
+    <div class="navbar-inner">
+        <a class="brand" th:href="@{/admin/transactions}">
+            <span class="brand-mark">🛠️</span>
+            <span>SharingFood Admin</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/transactions}" th:classappend="${active == 'transactions'} ? 'active'">All Transactions</a>
+        </div>
+        <a class="btn-logout" th:href="@{/admin/logout}">Logout</a>
+    </div>
+</nav>
+</body>
+</html>

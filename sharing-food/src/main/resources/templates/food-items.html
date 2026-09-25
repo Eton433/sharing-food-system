@@ -1,80 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Food Items</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Browse Food Items · SharingFood</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <th:block th:replace="~{fragments/theme :: theme}"></th:block>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>Available Food Items</h1>
+    <th:block th:replace="~{fragments/navbar :: navbar('browse', ${customer != null ? customer.name : null})}"></th:block>
 
-        <!-- User welcome and Add New Item button -->
-        <div th:if="${customer != null}">
-            <p>Welcome, <span th:text="${customer.name}"></span>!</p>
-            <a th:href="@{/food-items/add}" class="btn btn-primary mb-3">Add New Food Item</a>
+    <div class="page-shell">
+        <div class="page-header">
+            <div>
+                <span class="eyebrow">Campus marketplace</span>
+                <h1>Available Food Items</h1>
+                <p>Fresh finds shared by your fellow students.</p>
+            </div>
+            <a th:href="@{/food-items/add}" class="btn btn-primary" th:if="${customer != null}">+ Add New Food Item</a>
         </div>
 
-        <!-- Search bar -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <form action="/food-items/search" method="get" class="d-flex mb-4">
-                    <input type="text" name="keyword" class="form-control me-2" placeholder="Search for food...">
-                    <button type="submit" class="btn btn-outline-success">Search</button>
-                </form>
+        <form action="/food-items/search" method="get" class="d-flex mb-4" style="max-width: 420px;">
+            <input type="text" name="keyword" class="form-control me-2" placeholder="Search for food...">
+            <button type="submit" class="btn btn-outline-success">Search</button>
+        </form>
+
+        <div class="food-grid" th:if="${!foodItems.isEmpty()}">
+            <div class="food-card" th:each="foodItem : ${foodItems}">
+                <img th:src="${foodItem.imageUrl}" alt="Food Image" class="food-image" />
+                <div class="food-body">
+                    <div class="food-title-row">
+                        <div class="food-title" th:text="${foodItem.description}"></div>
+                        <div class="food-price">$<span th:text="${foodItem.price}"></span></div>
+                    </div>
+                    <div class="food-meta">
+                        <div>Seller: <span th:text="${foodItem.seller.name}"></span></div>
+                        <div>Location: <span th:text="${foodItem.location}"></span></div>
+                        <div>Quantity: <span th:text="${foodItem.quantity}"></span></div>
+                        <div>Expires: <span th:text="${foodItem.expiryDate}"></span></div>
+                    </div>
+                    <div class="food-actions">
+                        <a th:href="@{/food-items/location/{id}(id=${foodItem.id})}" target="_blank" class="btn btn-info btn-sm">
+                            📍 Location
+                        </a>
+                        <button type="button" class="btn btn-primary btn-sm order-btn"
+                                th:attr="data-food-id=${foodItem.id}, data-food-description=${foodItem.description}, data-food-price=${foodItem.price}, data-food-quantity=${foodItem.quantity}, data-customer-id=${customer.studentId}">
+                            Order
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Food items table -->
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Seller</th>
-                            <th>Price</th>
-                            <th>Location</th>
-                            <th>Quantity</th>
-                            <th>Expiry Date</th>
-                            <th>Image</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="foodItem : ${foodItems}">
-                            <td th:text="${foodItem.description}"></td>
-                            <td th:text="${foodItem.seller.name}"></td>
-                            <td th:text="${foodItem.price}"></td>
-                            <td th:text="${foodItem.location}"></td>
-                            <td th:text="${foodItem.quantity}"></td>
-                            <td th:text="${foodItem.expiryDate}"></td>
-                            <td>
-                                <img th:src="${foodItem.imageUrl}" alt="Food Image" class="img-thumbnail" style="width: 200px; height: auto;" />
-                            </td>
-                            <td>
-                                <!-- 查看位置按鈕 -->
-                                <a th:href="@{/food-items/location/{id}(id=${foodItem.id})}" target="_blank" class="btn btn-info mb-2">
-                                    View Location
-                                </a>
-                                <!-- Order 按鈕 -->
-                                <button type="button" class="btn btn-primary order-btn"
-                                        th:attr="data-food-id=${foodItem.id}, data-food-description=${foodItem.description}, data-food-price=${foodItem.price}, data-food-quantity=${foodItem.quantity}, data-customer-id=${customer.studentId}">
-                                    Order
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a th:href="@{/transactions/customer}" class="btn btn-primary mb-3">View Transactions</a>
-                <a th:href="@{/}" class="btn btn-primary">Back</a>
-            </div>
+        <div class="empty-state card-surface" th:if="${foodItems.isEmpty()}">
+            <div class="empty-icon">🍽️</div>
+            <p>No food items available right now. Check back soon!</p>
+        </div>
+
+        <div class="d-flex gap-2 mt-4">
+            <a th:href="@{/transactions/customer}" class="btn btn-primary">View Transactions</a>
+            <a th:href="@{/}" class="btn btn-info">Back</a>
         </div>
     </div>
 
     <!-- Order Confirmation Modal -->
     <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="border-radius: 16px; border: none;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="orderModalLabel">Confirm Your Order</h5>
                     <button type="button" class="btn-close" id="closeModal" aria-label="Close"></button>
@@ -86,7 +78,7 @@
                     <p><strong>Quantity:</strong> <span id="foodQuantity"></span></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="cancelOrderBtn">Cancel</button>
+                    <button type="button" class="btn btn-info" id="cancelOrderBtn">Cancel</button>
                     <button type="button" class="btn btn-primary" id="confirmOrderBtn">Confirm</button>
                 </div>
             </div>
